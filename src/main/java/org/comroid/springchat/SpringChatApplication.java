@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 @EntityScan(basePackages = {"org.comroid.springchat.entity"})
 public class SpringChatApplication {
     public static final FileHandle PATH_BASE = new FileHandle("/srv/chat/", true); // server path base
-    public static final FileHandle OAUTH_FILE = PATH_BASE.createSubFile("oauth2clients.json");
+    public static final FileHandle OAUTH_FILE = PATH_BASE.createSubFile("oauth2.json");
     public static void main(String[] args) {
         SpringApplication.run(SpringChatApplication.class, args);
     }
