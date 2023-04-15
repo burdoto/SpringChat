@@ -7,13 +7,8 @@
     <script type="application/javascript" src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.js"></script>
     <script type="application/javascript" src="script.js"></script>
 </head>
-<body onbeforeunload="disconnect()" onload="init()">
+<body onload="init()" onbeforeunload="disconnect()">
 <div>
-    <div id="login">
-        <h1>SpringChat</h1>
-        <input id="from" placeholder="Choose a nickname" type="text"/>
-        <button id="connect" onclick="connect();">Connect</button>
-    </div>
     <table id="conversation">
         <tr style="text-align: center">
             <td class="tableColLarge tableRowSmall"><h2>Chat</h2></td>

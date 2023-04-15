@@ -4,7 +4,9 @@ import org.comroid.springchat.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 
 import java.util.*;
@@ -70,7 +72,8 @@ public class ChatController {
 
     @MessageMapping("/users/handshake")
     @SendTo("/topic/handshake")
-    public Handshake userHandshake(String username) {
+    public Handshake userHandshake(SimpMessageHeaderAccessor headerAccessor) {
+        var username = ((OAuth2AuthenticationToken)headerAccessor.getHeader("simpUser")).getPrincipal().getName();
         int c = 1;
         while (Users.contains(username))
             if (c == 1)
@@ -82,7 +85,8 @@ public class ChatController {
 
     @MessageMapping("/users/join")
     @SendTo("/topic/users")
-    public Set<String> userJoin(String username) {
+    public Set<String> userJoin(SimpMessageHeaderAccessor headerAccessor) {
+        var username = ((OAuth2AuthenticationToken)headerAccessor.getHeader("simpUser")).getPrincipal().getName();
         StatusUpdate update = new StatusUpdate(StatusUpdate.Type.USER_JOIN, username);
         appendToBacklog(update);
         broadcast.convertAndSend("/topic/status", update);
@@ -91,7 +95,8 @@ public class ChatController {
 
     @MessageMapping("/users/leave")
     @SendTo("/topic/users")
-    public Set<String> userLeave(String username) {
+    public Set<String> userLeave(SimpMessageHeaderAccessor headerAccessor) {
+        var username = ((OAuth2AuthenticationToken)headerAccessor.getHeader("simpUser")).getPrincipal().getName();
         StatusUpdate update = new StatusUpdate(StatusUpdate.Type.USER_LEAVE, username);
         appendToBacklog(update);
         broadcast.convertAndSend("/topic/status", update);

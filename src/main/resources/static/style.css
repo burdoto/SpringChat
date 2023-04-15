@@ -32,15 +32,6 @@ body {
     height: 96%;
 }
 
-#login {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    margin-top: -50px;
-    margin-left: -100px;
-    text-align: center;
-}
-
 #chatBox {
     height: 100%;
     width: 100%;

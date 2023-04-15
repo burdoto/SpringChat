@@ -1,0 +1,33 @@
+server:
+  port: 42068
+# sessions
+  servlet:
+    session:
+      timeout: 7d
+spring:
+  session:
+    jdbc:
+      initialize-schema: embedded
+      table-name: sessions
+# oauth2
+  security: 
+    oauth2: 
+      client: 
+        provider: 
+          jb-hub: 
+            authorization-uri: https://hub.comroid.org/hub/api/rest/oauth2/auth
+            token-uri: https://hub.comroid.org/hub/api/rest/oauth2/token
+            user-info-uri: https://hub.comroid.org/hub/api/rest/users/me
+            user-name-attribute: login
+# database config
+  jpa: 
+    database-platform: org.hibernate.dialect.MySQL57Dialect
+    show-sql: false
+    hibernate.ddl-auto: update
+  datasource:
+    hikari:
+      auto-commit: true
+# mvc config
+  web:
+    resources:
+      static-locations: classpath:/static/

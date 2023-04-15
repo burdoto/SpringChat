@@ -6,22 +6,7 @@ var subscriptionUsers;
 var username;
 var soundNotify = new Audio('sound/notification.mp3');
 
-function setConnected(connected) {
-    document.getElementById('connect').disabled = connected;
-    document.getElementById('disconnect').disabled = !connected;
-    document.getElementById('from').disabled = connected;
-    document.getElementById('conversation').style.visibility
-        = connected ? 'visible' : 'hidden';
-    document.getElementById('login').style.visibility
-        = !connected ? 'visible' : 'hidden';
-}
-
 function connect() {
-    if (document.getElementById('from').value === '') {
-        console.error('Please enter a user name');
-        return;
-    }
-
     var socket = new SockJS('/app');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function(frame) {
@@ -29,7 +14,7 @@ function connect() {
         subscriptionHandshake = stompClient.subscribe('/topic/handshake', function(handshake){
             handleHandshake(JSON.parse(handshake.body));
         });
-        stompClient.send('/app/users/handshake', {}, document.getElementById('from').value);
+        stompClient.send('/app/users/handshake', {});
     });
 }
 
@@ -49,7 +34,6 @@ function handleHandshake(handshake) {
     username = handshake.username;
     document.getElementById('response').innerHTML = '';
     handshake.backlog.forEach(handleBacklog);
-    setConnected(true);
     subscriptionHandshake.unsubscribe();
     subscriptionStatus = stompClient.subscribe('/topic/status', function(status){
         appendStatusMessage(JSON.parse(status.body));
@@ -82,7 +66,6 @@ function disconnect() {
         subscriptionUsers.unsubscribe();
         stompClient.disconnect();
     }
-    setConnected(false);
     console.log("Disconnected");
 }
 
@@ -130,7 +113,7 @@ function appendMessage(msg) {
 }
 
 function init() {
-    disconnect();
+    connect();
 
     // Enables pressing the Enter Key in the Send Message Prompt
     document.getElementById('text')
@@ -138,15 +121,6 @@ function init() {
             event.preventDefault();
             if (event.keyCode === 13) {
                 document.getElementById("sendMessage").click();
-            }
-        });
-
-    // Enables pressing the Enter Key in the Login Prompt
-    document.getElementById('login')
-        .addEventListener('keyup', function(event) {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                connect();
             }
         });
 }
